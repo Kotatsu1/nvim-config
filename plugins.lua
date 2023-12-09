@@ -47,7 +47,8 @@ local plugins = {
         "typescript",
         "tsx",
         "json",
-        "c"
+        "c",
+        "go"
       }
     }
   },
