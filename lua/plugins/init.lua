@@ -1,51 +1,47 @@
+local servers = {
+  "lua-language-server",
+  "typescript-language-server",
+  "stylua",
+  "html-lsp",
+  "css-lsp",
+  "prettier",
+  "gopls",
+  "prismals",
+  "clangd",
+  "pyright",
+  "rust-analyzer"
+}
+
 return {
   {
-    "nvim-tree/nvim-tree.lua",
+    "williamboman/mason.nvim",
     opts = {
-      filters = {
-        custom = {
-          "__pycache__"
-        }
-      }
-    }
-  },
-  {
-    "stevearc/conform.nvim",
-    -- event = 'BufWritePre', -- uncomment for format on save
-    config = function()
-      require "configs.conform"
-    end,
-  },
-  {
-    "okuuva/auto-save.nvim",
-    cmd = "ASToggle",
-    event = {
-      "InsertLeave",
-      "TextChanged"
+      ensure_installed = servers,
     },
-    opts = {
-      debounce_delay = 100
-    }
+  },
+  {
+    "williamboman/mason-lspconfig.nvim",
+    config = function()
+      require("mason-lspconfig").setup {
+        ensure_installed = servers,
+        automatic_installation = true,
+      }
+
+      local lspconfig = require("lspconfig")
+      for _, lsp in ipairs(servers) do
+        lspconfig[lsp].setup {}
+      end
+    end,
   },
   {
     "neovim/nvim-lspconfig",
     config = function()
-      require("nvchad.configs.lspconfig").defaults()
-      require "configs.lspconfig"
+      local lspconfig = require("lspconfig")
+
+      for _, lsp in ipairs(servers) do
+        lspconfig[lsp].setup {}
+      end
     end,
-  },
-  {
-  	"williamboman/mason.nvim",
-  	opts = {
-  		ensure_installed = {
-  			"lua-language-server",
-        "stylua",
-  			"html-lsp",
-        "css-lsp",
-        "prettier",
-        "gopls"
-  		},
-  	},
   },
   {
   	"nvim-treesitter/nvim-treesitter",
@@ -62,11 +58,38 @@ return {
         "tsx",
         "json",
         "c",
-        "go",
         "markdown",
-        "go"
+        "go",
+        "rust"
       }
   	},
+  },
+  {
+    "nvim-tree/nvim-tree.lua",
+    opts = {
+      filters = {
+        custom = {
+          "__pycache__"
+        }
+      }
+    }
+  },
+  {
+    "stevearc/conform.nvim",
+    config = function()
+      require "configs.conform"
+    end,
+  },
+  {
+    "okuuva/auto-save.nvim",
+    cmd = "ASToggle",
+    event = {
+      "InsertLeave",
+      "TextChanged"
+    },
+    opts = {
+      debounce_delay = 100
+    }
   },
   {
     "lambdalisue/suda.vim",
