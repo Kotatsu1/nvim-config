@@ -1,47 +1,10 @@
-local servers = {
-  "lua-language-server",
-  "typescript-language-server",
-  "stylua",
-  "html-lsp",
-  "css-lsp",
-  "prettier",
-  "gopls",
-  "prismals",
-  "clangd",
-  "pyright",
-  "rust-analyzer"
-}
-
 return {
   {
-    "williamboman/mason.nvim",
-    opts = {
-      ensure_installed = servers,
-    },
-  },
-  {
-    "williamboman/mason-lspconfig.nvim",
-    config = function()
-      require("mason-lspconfig").setup {
-        ensure_installed = servers,
-        automatic_installation = true,
-      }
-
-      local lspconfig = require("lspconfig")
-      for _, lsp in ipairs(servers) do
-        lspconfig[lsp].setup {}
-      end
-    end,
-  },
-  {
     "neovim/nvim-lspconfig",
-    config = function()
-      local lspconfig = require("lspconfig")
-
-      for _, lsp in ipairs(servers) do
-        lspconfig[lsp].setup {}
-      end
-    end,
+     config = function()
+        require("nvchad.configs.lspconfig").defaults()
+        require "configs.lspconfig"
+     end,
   },
   {
   	"nvim-treesitter/nvim-treesitter",
@@ -79,6 +42,13 @@ return {
     config = function()
       require "configs.conform"
     end,
+  },
+  {
+    "max397574/colortils.nvim",
+    cmd = "Colortils",
+    config = function()
+      require("colortils").setup()
+    end
   },
   {
     "okuuva/auto-save.nvim",
